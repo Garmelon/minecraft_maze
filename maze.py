@@ -42,7 +42,8 @@ class Maze:
 		"""
 		-> str
 		
-		Convert the maze to string representation
+		Convert the maze to string representation.
+		This function shows boundary walls around the maze.
 		"""
 		s = "".join([self.SYMBOLS["x"] for i in range(self.x + 2)]) + "\n"
 		for row in self.maze:
@@ -73,6 +74,14 @@ class Maze:
 		Set the value of the cell at x, y to val.
 		"""
 		self.maze[y][x] = val
+	
+	def mark_adjacent(self, x, y):
+		"""
+		-> None
+		
+		Marks all cells adjacent to x, y as "?" and add them to the queue.
+		"""
+		pass
 	
 	def replace(self, val1, val2):
 		"""
@@ -131,11 +140,15 @@ class Maze:
 		self.count = 0 # gif image file names
 		self.maze = [[" " for y in range(self.x)] for x in range(self.y)]
 	
-	def fill(self):
+	def fill(self, points=None):
 		"""
 		-> None
 		
 		Add the start and the end point and a few random seeds to the maze.
+		To manually add seed points (for example starting or end points)
+		in addition to the randomly generated seed points, specify their
+		coordinates as tuples in the points list:
+		fill([(x1, y1), (x2, y2)])
 		"""
 		pass
 	
