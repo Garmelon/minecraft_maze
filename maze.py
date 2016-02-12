@@ -81,7 +81,10 @@ class Maze:
 		
 		Marks all cells adjacent to x, y as "?" and add them to the queue.
 		"""
-		pass
+		for xn, yn in self.get_neighbours(x, y):
+			if self.get_cell(xn, yn) == " ":
+				self.set_cell(xn, yn, "?")
+				self.queue.append((xn, yn))
 	
 	def replace(self, val1, val2):
 		"""
