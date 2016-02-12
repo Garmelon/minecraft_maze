@@ -125,3 +125,12 @@ class Maze:
 		Save a png image of the maze in path.
 		"""
 		pass
+
+if __name__ == "__main__":
+	maze = Maze(*sys.argv[1:])
+	maze.generate()
+	print(maze)
+	stats = maze.get_stats()
+	print("Paths: {}\nWalls: {}".format(stats["o"], stats["x"]))
+	maze.save_image("maze.png")
+	print("Saved maze as maze.png")
