@@ -49,7 +49,7 @@ class Maze:
 		
 		Return whether the coordinates lie within the boundaries of the maze.
 		"""
-		pass
+		return x >= 0 and y >= 0 and x < self.x and y < self.y
 	
 	def get_cell(self, x, y):
 		"""
@@ -57,7 +57,7 @@ class Maze:
 		
 		Return the value of the cell at x, y.
 		"""
-		pass
+		return self.maze[y][x]
 	
 	def set_cell(self, x, y, val):
 		"""
@@ -65,7 +65,7 @@ class Maze:
 		
 		Set the value of the cell at x, y to val.
 		"""
-		pass
+		self.maze[y][x] = val
 	
 	def replace(self, val1, val2):
 		"""
@@ -73,7 +73,10 @@ class Maze:
 		
 		Replace all occurrences of val1 with another val2.
 		"""
-		pass
+		for y in range(self.y):
+			for x in range(self.x):
+				if self.maze[y][x] == val1:
+					self.maze[y][x] = val2
 	
 	def replace_integers(self, val):
 		"""
