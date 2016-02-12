@@ -24,6 +24,9 @@ class Maze:
 	>>> print(mymaze)
 	"""
 	
+	DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)] # directions a player can move in
+	SYMBOLS = {" ": "░░", "?": "▒▒", "o": "  ", "x": "██"} # symbols for the different cell types
+	
 	def __init__(self, x_size, y_size):
 		"""
 		-> None
@@ -75,8 +78,8 @@ class Maze:
 		"""
 		for y in range(self.y):
 			for x in range(self.x):
-				if self.maze[y][x] == val1:
-					self.maze[y][x] = val2
+				if self.get_cell(x, y) == val1:
+					self.set_cell(x, y, val2)
 	
 	def replace_integers(self, val):
 		"""
@@ -84,7 +87,10 @@ class Maze:
 		
 		Replace all integers with val.
 		"""
-		pass
+		for y in range(self.y):
+			for x in range(self.x):
+				if type(self.get_cell(x, y)) is int:
+					self.set_cell(x, y, val)
 	
 	def get_neighbours(self, x, y):
 		"""
@@ -92,7 +98,12 @@ class Maze:
 		
 		Return a list of coordinate tuples of neighbours of the cell at x, y.
 		"""
-		pass
+		neighbours = []
+		for xd, yd in self.DIRECTIONS:
+			xd, yd = xd + x, yd + y
+			if self.in_boundaries(xd, yd):
+				neighbours.append((xd, yd))
+		return neighbours
 	
 	def queue_pop_random(self):
 		"""
