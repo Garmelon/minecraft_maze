@@ -10,9 +10,11 @@ class Maze:
 	Maze(x_size, y_size) -> maze
 		
 	x_size, y_size: The size of the maze in the x and y direction (in cells)
-	NOTE: NOT the coordinates of the edge of the maze
+		NOTE: NOT the coordinates of the edge of the maze
+	
 	NOTE: The outside walls of the maze aren't a part of the maze
 	NOTE: Cell coordinates start at (0|0), not (1|1)
+	NOTE: To access the maze cells: self.maze[y][x] - y first!
 	
 	Usage:
 	Once you have created an instance, use the generate() function to
@@ -27,8 +29,11 @@ class Maze:
 		-> None
 		
 		Initialize the maze. See class docstring for further details.
+		NOTE: This function doesn't generate a maze layout.
 		"""
-		pass
+		self.x = x_size
+		self.y = y_size
+		self.reset()
 	
 	def __str__(self):
 		"""
@@ -86,21 +91,27 @@ class Maze:
 		"""
 		pass
 	
-	def get_random_from_queue(self):
+	def queue_pop_random(self):
 		"""
 		-> coordinate tuple
 		
-		Return a random coordinate tuple from the queue.
+		Pop and return a random coordinate tuple from the queue.
+		This function will return None if the queue is empty.
 		"""
-		pass
+		if self.queue:
+			return self.queue.pop(random.randrange(len(self.queue)))
 	
 	def reset(self):
 		"""
 		-> None
 		
-		Reset the maze to an empty state. Also resets the queue.
+		Reset the maze to an empty state.
+		Also resets the queue, seed points and gif image name count.
 		"""
-		pass
+		self.queue = []
+		self.points = []
+		self.count = 0 # gif image file names
+		self.maze = [[" " for y in range(self.x)] for x in range(self.y)]
 	
 	def fill(self):
 		"""
@@ -110,11 +121,19 @@ class Maze:
 		"""
 		pass
 	
-	def generate(self):
+	def generate(self, x_start, y_start, x_end, y_end, gif_path=None):
 		"""
 		-> None
 		
-		TODO
+		Generate a new maze layout.
+		x_start, y_start: coordinates of the starting point
+		x_end, y_end    : coordinates of the end point
+		
+		If you want to generate a gif detailing the generation process:
+		Specify a path to an empty folder as gif_path. Every step in
+		the generation process, an image displaying the current state
+		will be saved in the folder. You will have to combine these images
+		into a gif yourself afterwards.
 		"""
 		pass
 	
