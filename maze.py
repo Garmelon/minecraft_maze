@@ -150,7 +150,20 @@ class Maze:
 		coordinates as tuples in the points list:
 		fill([(x1, y1), (x2, y2)])
 		"""
-		pass
+		if points is None:
+			points = []
+		for i in range((self.x//10)*(self.y//10)): # add random points
+			points.append((random.randrange(self.x), random.randrange(self.y)))
+		for i in range(len(points)): # add points to map
+			x, y = points[i]
+			self.set_cell(x, y, i)
+			for xn, yn in self.get_neighbours(x, y):
+				cell = self.get_cell(xn, yn)
+				if type(cell) is int and not cell == i:
+					self.replace(cell, i)
+		for x, y in points:
+			self.mark_adjacent(x, y)
+		self.points = points
 	
 	def generate(self, x_start, y_start, x_end, y_end, gif_path=None):
 		"""
