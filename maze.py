@@ -183,7 +183,49 @@ class Maze:
 		will be saved in the folder (maze_xxxxxxxx.png). You will have
 		to combine the frames into a gif yourself.
 		"""
-		pass
+		# initializing the maze
+		self.reset()
+		if gif_path:
+			for i in range(10):
+				self.save_gif_frame(gif_path)
+		self.fill([(x_start, y_start), (x_end, y_end)])
+		if gif_path:
+			for i in range(10):
+				self.save_gif_frame(gif_path)
+		
+		# actual maze making algorithm
+		while self.queue:
+			x_cur, y_cur = self.queue_pop_random()
+			# find all neighbours which are a path (coordinates)
+			neighbours = [(xn, yn) for xn, yn in self.get_neighbours(x_cur, y_cur) if type(self.get_cell(xn, yn)) is int]
+			# find all unique neighbour webs (connected paths) (id of the web)
+			neighbour_webs = []
+			for xn, yn in neighbours:
+				cell = self.get_cell(xn, yn)
+				if not cell in neighbour_webs:
+					neighbour_webs.append(cell)
+			# determine the current cell's "state"
+			if len(neighbour_webs) == 1:
+				if len(neighbours) > 1:
+					self.set_cell(x_cur, y_cur, "x")
+				else:
+					self.set_cell(x_cur, y_cur, neighbour_webs[0])
+					self.mark_adjacent(x_cur, y_cur)
+			else:
+				self.set_cell(x_cur, y_cur, neighbour_webs[0])
+				self.mark_adjacent(x_cur, y_cur)
+				for web in neighbour_webs[1:]:
+					self.replace(web, neighbour_webs[0])
+			# draw the gif frame
+			if gif_path:
+				self.save_gif_frame(gif_path)
+		
+		# finishing touches
+		self.replace(" ", "x")
+		self.replace_integers("o")
+		if gif_path:
+			for i in range(20):
+				self.save_gif_frame(gif_path)
 	
 	def save_image(self, path):
 		"""
@@ -194,10 +236,14 @@ class Maze:
 		cells = []
 		cells.append([self.COLORS["x"] for i in range(self.x + 2)])
 		for row in self.maze:
-			cells.append([self.COLORS["x"]] + [col.hsv_to_rgb([cell/len(self.points)]) if type(cell) is int else self.COLORS[cell] for cell in row] + [self.COLORS["x"]])
+			cells.append([self.COLORS["x"]] + [col.hsv_to_rgb([cell/len(self.points), .5, 1]) if type(cell) is int else self.COLORS[cell] for cell in row] + [self.COLORS["x"]])
 		cells.append([self.COLORS["x"] for i in range(self.x + 2)])
 		cells = np.array(cells)
 		plt.imsave(path, cells)
+	
+	def save_gif_frame(self, path):
+		self.save_image("{}maze_{:0>8}.png".format(path, self.count))
+		self.count += 1
 	
 	def get_stats(self):
 		"""
