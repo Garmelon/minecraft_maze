@@ -1,9 +1,9 @@
 import sys
 import random
 
-#import numpy as np
-#import matplotlib.pyplot as plt
-#import matplotlib.colors as col
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.colors as col
 
 class Maze:
 	"""
@@ -26,6 +26,7 @@ class Maze:
 	
 	DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)] # directions a player can move in
 	SYMBOLS = {" ": "░░", "?": "▒▒", "o": "  ", "x": "██"} # symbols for the different cell types
+	COLORS = {" ": [.5, .5, .5], "?": [.5, 0, 0], "x": [0, 0, 0], "o": [1, 1, 1]}
 	
 	def __init__(self, x_size, y_size):
 		"""
@@ -136,11 +137,11 @@ class Maze:
 		-> None
 		
 		Reset the maze to an empty state.
-		Also resets the queue, seed points and gif image name count.
+		Also resets the queue, seed points and gif frame name count.
 		"""
 		self.queue = []
 		self.points = []
-		self.count = 0 # gif image file names
+		self.count = 0 # gif frame file names
 		self.maze = [[" " for y in range(self.x)] for x in range(self.y)]
 	
 	def fill(self, points=None):
@@ -178,9 +179,9 @@ class Maze:
 		
 		If you want to generate a gif detailing the generation process:
 		Specify a path to an empty folder as gif_path. Every step in
-		the generation process, an image displaying the current state
-		will be saved in the folder. You will have to combine these images
-		into a gif yourself afterwards.
+		the generation process, a frame displaying the current state
+		will be saved in the folder (maze_xxxxxxxx.png). You will have
+		to combine the frames into a gif yourself.
 		"""
 		pass
 	
@@ -190,7 +191,13 @@ class Maze:
 		
 		Save a png image of the maze in path.
 		"""
-		pass
+		cells = []
+		cells.append([self.COLORS["x"] for i in range(self.x + 2)])
+		for row in self.maze:
+			cells.append([self.COLORS["x"]] + [col.hsv_to_rgb([cell/len(self.points)]) if type(cell) is int else self.COLORS[cell] for cell in row] + [self.COLORS["x"]])
+		cells.append([self.COLORS["x"] for i in range(self.x + 2)])
+		cells = np.array(cells)
+		plt.imsave(path, cells)
 	
 	def get_stats(self):
 		"""
@@ -210,11 +217,30 @@ class Maze:
 					walls += 1
 		return paths, walls
 
-if __name__ == "__main__":
-	maze = Maze(*[int(arg) for arg in sys.argv[1:3]])
-	maze.generate(*[int(arg) for arg in sys.argv[3:7]])
+def main(args):
+	if args[1] in ["-h", "--help"]:
+		print("Script to create mazes! Yay!\n")
+		print("Usage:")
+		print("    python3 maze.py x_size y_size x_start y_start x_end y_end[ image_path[ gif_path]]\n")
+		print("    x_size, y_size  : size of the maze")
+		print("    x_start, y_start: coordinates of starting point")
+		print("    x_end, y_end    : coordinates of end point")
+		print("    image_path      : image location")
+		print("    gif_path        : path to folder to store gif frames in")
+		return
+	
+	maze = Maze(*[int(arg) for arg in args[1:3]])
+	if len(args) >= 9:
+		print("Saving gif frames to {}".format(args[8]))
+		maze.generate(*[int(arg) for arg in args[3:7]], gif_path=args[8])
+	else:
+		maze.generate(*[int(arg) for arg in args[3:7]])
 	print(maze)
 	paths, walls = maze.get_stats()
 	print("Paths: {}\nWalls: {}".format(paths, walls))
-	maze.save_image("maze.png")
-	print("Saved maze as maze.png")
+	if len(args) >= 8:
+		maze.save_image(args[7])
+		print("Saved maze to {}".format(args[7]))
+	
+if __name__ == "__main__":
+	main(sys.argv)
