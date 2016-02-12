@@ -162,6 +162,15 @@ class Maze:
 		Save a png image of the maze in path.
 		"""
 		pass
+	
+	def get_stats(self):
+		"""
+		-> amount of paths, amount of walls
+		
+		Count and return the amount of paths and walls in the maze.
+		NOTE: The outside walls aren't a part of the maze.
+		"""
+		pass
 
 if __name__ == "__main__":
 	maze = Maze(*[int(arg) for arg in sys.argv[1:3]])
