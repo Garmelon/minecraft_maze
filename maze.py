@@ -82,7 +82,15 @@ class Maze:
 		"""
 		-> list of neighbours
 		
-		Return a list of neighbour coordinates of the cell at x, y.
+		Return a list of coordinate tuples of neighbours of the cell at x, y.
+		"""
+		pass
+	
+	def get_random_from_queue(self):
+		"""
+		-> coordinate tuple
+		
+		Return a random coordinate tuple from the queue.
 		"""
 		pass
 	
@@ -94,7 +102,7 @@ class Maze:
 		"""
 		pass
 	
-	def fill(self, x_start, y_start, x_end, y_end, amount):
+	def fill(self):
 		"""
 		-> None
 		
@@ -102,10 +110,18 @@ class Maze:
 		"""
 		pass
 	
-	def generate(x_start, y_start, x_end, y_end):
+	def generate(self):
 		"""
 		-> None
 		
 		TODO
+		"""
+		pass
+	
+	def save_image(self, path):
+		"""
+		-> None
+		
+		Save a png image of the maze in path.
 		"""
 		pass
