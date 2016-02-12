@@ -44,7 +44,11 @@ class Maze:
 		
 		Convert the maze to string representation
 		"""
-		pass
+		s = "".join([self.SYMBOLS["x"] for i in range(self.x + 2)]) + "\n"
+		for row in self.maze:
+			s += "{0}{1}{0}\n".format(self.SYMBOLS["x"], "".join([self.SYMBOLS["o"] if type(cell) is int else self.SYMBOLS[cell] for cell in row]))
+		s += "".join([self.SYMBOLS["x"] for i in range(self.x + 2)])
+		return s
 	
 	def in_boundaries(self, x, y):
 		"""
@@ -160,8 +164,8 @@ class Maze:
 		pass
 
 if __name__ == "__main__":
-	maze = Maze(*sys.argv[1:])
-	maze.generate()
+	maze = Maze(*[int(arg) for arg in sys.argv[1:3]])
+	maze.generate(*[int(arg) for arg in sys.argv[3:7]])
 	print(maze)
 	stats = maze.get_stats()
 	print("Paths: {}\nWalls: {}".format(stats["o"], stats["x"]))
