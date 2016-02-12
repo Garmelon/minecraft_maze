@@ -92,8 +92,8 @@ class Maze:
 		
 		Replace all occurrences of val1 with another val2.
 		"""
-		for y in range(self.y):
-			for x in range(self.x):
+		for x in range(self.x):
+			for y in range(self.y):
 				if self.get_cell(x, y) == val1:
 					self.set_cell(x, y, val2)
 	
@@ -103,8 +103,8 @@ class Maze:
 		
 		Replace all integers with val.
 		"""
-		for y in range(self.y):
-			for x in range(self.x):
+		for x in range(self.x):
+			for y in range(self.y):
 				if type(self.get_cell(x, y)) is int:
 					self.set_cell(x, y, val)
 	
@@ -199,13 +199,22 @@ class Maze:
 		Count and return the amount of paths and walls in the maze.
 		NOTE: The outside walls aren't a part of the maze.
 		"""
-		pass
+		paths = 0
+		walls = 0
+		for x in range(self.x):
+			for y in range(self.y):
+				cell = self.get_cell(x, y)
+				if type(cell) is int or cell == "o":
+					paths += 1
+				elif cell == "x":
+					walls += 1
+		return paths, walls
 
 if __name__ == "__main__":
 	maze = Maze(*[int(arg) for arg in sys.argv[1:3]])
 	maze.generate(*[int(arg) for arg in sys.argv[3:7]])
 	print(maze)
-	stats = maze.get_stats()
-	print("Paths: {}\nWalls: {}".format(stats["o"], stats["x"]))
+	paths, walls = maze.get_stats()
+	print("Paths: {}\nWalls: {}".format(paths, walls))
 	maze.save_image("maze.png")
 	print("Saved maze as maze.png")
